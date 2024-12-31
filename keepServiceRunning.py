@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
 import requests
-
+import gunicorn
 app = Flask(__name__)
 
 scheduler = BackgroundScheduler()
