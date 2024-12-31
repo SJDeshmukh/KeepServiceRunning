@@ -1,21 +1,21 @@
 from flask import Flask, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
 import requests
-import gunicorn
+
 app = Flask(__name__)
 
 scheduler = BackgroundScheduler()
 scheduler.start()
 
 DEFAULT_URL = "https://cartoonishimage.onrender.com/"
-DEFAULT_INTERVAL = 40  # Default interval in seconds
+DEFAULT_INTERVAL = 10  # Default interval in seconds
 
 # Function to trigger the website
 def trigger_website(url):
     try:
         response = requests.get(url)
         print(f"Triggered {url}: Status Code {response.status_code}")
-    except Exception as e:
+    except requests.exceptions.RequestException as e:
         print(f"Error triggering {url}: {e}")
 
 # Function to start the trigger
@@ -37,4 +37,5 @@ def stop_trigger():
 if __name__ == '__main__':
     # Ensure the trigger starts when the app runs
     start_default_trigger()
-    app.run()
+    # Run the app with Gunicorn in production, not app.run()
+    app.run(host="0.0.0.0", port=5000, debug=False)
